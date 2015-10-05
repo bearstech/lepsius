@@ -15,9 +15,9 @@ def bucketize(items):
     for item in items:
         if item is None:
             continue
-        dt = (item['datetime'].day,
-              item['datetime'].hour,
-              item['datetime'].minute)
+        dt = (item['timestamp'].day,
+              item['timestamp'].hour,
+              item['timestamp'].minute)
         if ts is None:
             ts = dt
             bucket.append(item)
