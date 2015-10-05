@@ -1,0 +1,30 @@
+from collections import defaultdict
+
+
+def group_by(items, key):
+    groups = defaultdict(list)
+    for item in items:
+        groups[item[key]].append(item)
+    return dict(groups)
+
+
+def bucketize(items):
+    # Bucketsize = 1 minute
+    bucket = []
+    ts = None
+    for item in items:
+        if item is None:
+            continue
+        dt = (item['datetime'].day,
+              item['datetime'].hour,
+              item['datetime'].minute)
+        if ts is None:
+            ts = dt
+            bucket.append(item)
+            continue
+        if ts != dt:
+            yield bucket
+            bucket = []
+        bucket.append(item)
+    if bucket != []:
+        yield bucket
