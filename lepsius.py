@@ -8,6 +8,13 @@ def group_by(items, key):
     return dict(groups)
 
 
+def count(items, key):
+    counts = defaultdict(int)
+    for item in items:
+        counts[item[key]] += 1
+    return dict(counts)
+
+
 def bucketize(items):
     # Bucketsize = 1 minute
     bucket = []
