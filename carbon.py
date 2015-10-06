@@ -2,7 +2,7 @@ import socket
 from datetime import datetime
 
 
-class GraphiteClient:
+class CarbonClient:
 
     def __init__(self, host='localhost', port=2003):
         self.host = host
@@ -22,5 +22,5 @@ class GraphiteClient:
 
 
 if __name__ == '__main__':
-    gc = GraphiteClient()
-    gc.send('pim.pam.poum', 42)
+    cc = CarbonClient()
+    cc.send('pim.pam.poum', 42)
