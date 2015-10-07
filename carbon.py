@@ -8,6 +8,7 @@ class CarbonClient:
         self.host = host
         self.port = port
         self._socket = None
+        self.prefix = "lepsius.%s" % socket.gethostname()
 
     @property
     def _lazy_socket(self):
@@ -17,8 +18,11 @@ class CarbonClient:
         return self._socket
 
     def send(self, key, value, ts=datetime.now()):
-        self._lazy_socket.sendall("%s %d %d\n" % (key, value,
-                                                  int(ts.timestamp())))
+        assert type(ts) == datetime
+        self._lazy_socket.sendall(bytes("%s.%s %d %d\n" % (self.prefix, key,
+                                                           value,
+                                                           int(ts.timestamp())
+                                                           ), 'utf-8'))
 
 
 if __name__ == '__main__':
