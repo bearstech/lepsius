@@ -22,7 +22,9 @@ def bucketize(items):
     for item in items:
         if item is None:
             continue
-        dt = (item['timestamp'].day,
+        dt = (item['timestamp'].year,
+              item['timestamp'].month,
+              item['timestamp'].day,
               item['timestamp'].hour,
               item['timestamp'].minute)
         if ts is None:
@@ -30,6 +32,7 @@ def bucketize(items):
             bucket.append(item)
             continue
         if ts != dt:
+            ts = dt
             yield bucket
             bucket = []
         bucket.append(item)
