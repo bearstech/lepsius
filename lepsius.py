@@ -44,6 +44,6 @@ def bucketize(items):
 def apdex(items, target, tolerablefactor=4):
     tolerabletarget = target * tolerablefactor
     total = len(items)
-    tolerable = total - len(list(filter(lambda f: f > tolerabletarget, items)))
-    satisfied = len(list(filter(lambda f: f <= target, items)))
+    tolerable = total - len([f for f in items if f > tolerabletarget])
+    satisfied = len([f for f in items if f <= target])
     return (satisfied + tolerable / 2.0) / total
