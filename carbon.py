@@ -19,10 +19,11 @@ class CarbonClient:
 
     def send(self, key, value, ts=datetime.now()):
         assert type(ts) == datetime
-        self._lazy_socket.sendall(bytes("%s.%s %d %d\n" % (self.prefix, key,
-                                                           value,
-                                                           int(ts.timestamp())
-                                                           ), 'utf-8'))
+        line = u"%s.%s %d %d\n" % (self.prefix, key,
+                                   value,
+                                   int(ts.timestamp())
+                                   )
+        self._lazy_socket.sendall(bytes(line, 'utf-8'))
 
 
 if __name__ == '__main__':
