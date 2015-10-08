@@ -38,3 +38,12 @@ def bucketize(items):
         bucket.append(item)
     if bucket != []:
         yield bucket
+
+
+# https://en.wikipedia.org/wiki/Apdex
+def apdex(items, target, tolerablefactor=4):
+    tolerabletarget = target * tolerablefactor
+    total = len(items)
+    tolerable = total - len(list(filter(lambda f: f > tolerabletarget, items)))
+    satisfied = len(list(filter(lambda f: f <= target, items)))
+    return (satisfied + tolerable / 2.0) / total

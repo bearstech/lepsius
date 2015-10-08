@@ -2,7 +2,7 @@ from datetime import datetime
 
 import sys
 sys.path.append(".")
-from lepsius import count, bucketize, group_by
+from lepsius import count, bucketize, group_by, apdex
 
 
 def test_count():
@@ -29,5 +29,12 @@ def test_bucketize():
         for status, line in g.items():
             print(status, len(line))
 
+
+def test_apdex():
+    a = range(10)
+    assert 0.75 == apdex(a, 2)
+
+
 test_count()
 test_bucketize()
+test_apdex()
