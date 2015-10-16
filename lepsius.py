@@ -1,4 +1,38 @@
 from collections import defaultdict
+from datetime import datetime
+
+from pygrok import grok_match
+
+"""
+Use something like this:
+
+import sys
+from pygtail import Pygtail
+
+lines = grok_parser("%{HAPROXYHTTP}", Pygtail(sys.argv[1]),
+                    date_key="accept_date",
+                    date_format="%d/%b/%Y:%H:%M:%S.%f")
+for ts, bucket in bucketize(lines):
+    # One bucket per minute
+    backends = group_by(bucket, 'backend_name')
+
+    for backend, values in backends.items():
+        # Now, you can compute group by backend
+
+"""
+
+
+def grok_parser(pattern, lines, cb_oups=None, date_key=None, date_format=None):
+    for line in lines:
+        m = grok_match(line, pattern)
+        if m is None:
+            if cb_oups is not None:
+                cb_oups(line)
+            continue
+        if None not in {date_key, date_format}:
+            ts = datetime.strptime(m[date_key], date_format)
+            m['timestamp'] = ts
+        yield m
 
 
 def group_by(items, key):
@@ -33,11 +67,13 @@ def bucketize(items):
             continue
         if ts != dt:
             ts = dt
-            yield bucket
+            t = bucket[0]['timestamp'].replace(second=0, microsecond=0)
+            yield t, bucket
             bucket = []
         bucket.append(item)
     if bucket != []:
-        yield bucket
+        t = bucket[0]['timestamp'].replace(second=0, microsecond=0)
+        yield t, bucket
 
 
 # https://en.wikipedia.org/wiki/Apdex
@@ -45,11 +81,11 @@ def apdex(items, target, tolerablefactor=4):
     tolerabletarget = target * tolerablefactor
     total = len(items)
     if total == 0:
-        return None
+        return None, 0
     untolerable = len([f for f in items if f > tolerabletarget])
     satisfied = len([f for f in items if f <= target])
     if untolerable == 0:
         tolerable = 0
     else:
         tolerable = total - untolerable - satisfied
-    return (satisfied + (tolerable / 2.0)) / total
+    return (satisfied + (tolerable / 2.0)) / total, total
