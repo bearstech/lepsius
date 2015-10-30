@@ -1,0 +1,6 @@
+regex
+pygtail
+
+# waiting for the pull request.
+#pygrok
+git+https://github.com/athoune/pygrok.git
