@@ -1,7 +1,9 @@
 from collections import defaultdict
 from datetime import datetime
+import time
 
 from pygrok import grok_match
+from pygtail import Pygtail
 
 """
 Use something like this:
@@ -20,6 +22,13 @@ for ts, bucket in bucketize(lines):
         # Now, you can compute group by backend
 
 """
+
+
+def forever_tail(path):
+    while True:
+        for line in Pygtail(path):
+            yield line
+        time.sleep(10)
 
 
 def grok_parser(pattern, lines, cb_oups=None, date_key=None, date_format=None):
