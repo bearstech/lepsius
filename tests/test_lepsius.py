@@ -24,7 +24,7 @@ def test_bucketize():
          dict(timestamp=datetime(2015, 10, 7, hour=21, minute=42, second=27),
               status='200'),
          ]
-    for b in bucketize(a):
+    for t, b in bucketize(a):
         g = group_by(b, 'status')
         for status, line in g.items():
             print(status, len(line))
@@ -32,7 +32,8 @@ def test_bucketize():
 
 def test_apdex():
     a = range(10)
-    assert 0.75 == apdex(a, 2)
+    ap, total = apdex(a, 2)
+    assert 0.6 == ap
 
 
 test_count()
