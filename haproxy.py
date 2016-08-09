@@ -5,9 +5,9 @@ from lepsius import bucketize, group_by, apdex, grok_parser
 from lepsius.carbon import CarbonClient
 
 
-def forever_tail(path):
+def forever_tail(path, offset):
     while True:
-        for line in Pygtail(path):
+        for line in Pygtail(path, offset):
             yield line
         time.sleep(10)
 
@@ -21,6 +21,7 @@ STATUS = "haproxy.http_status.{service}.{status}"
 if __name__ == '__main__':
     import sys
     import os
+    import os.path
 
     carbon = CarbonClient(os.getenv("CARBON_HOST", "localhost"))
 
@@ -28,7 +29,11 @@ if __name__ == '__main__':
         print("OUPS", line)
 
     if len(sys.argv) > 1:
-        source = forever_tail(sys.argv[1])
+        offset = os.getenv("OFFSET_FOLDER", None)
+        if offset:
+            full = os.path.abspatc(sys.argv[1]).replace('/', '-')
+            offset = "%s/%s.offset" % (offset, full)
+        source = forever_tail(sys.argv[1], offset)
     else:
         source = sys.stdin
 
