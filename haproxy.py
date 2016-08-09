@@ -2,7 +2,7 @@ import time
 from pygtail import Pygtail
 
 from lepsius import bucketize, group_by, apdex, grok_parser
-from carbon import CarbonClient
+from lepsius.carbon import CarbonClient
 
 
 def forever_tail(path):
