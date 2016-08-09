@@ -31,7 +31,7 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         offset = os.getenv("OFFSET_FOLDER", None)
         if offset:
-            full = os.path.abspatc(sys.argv[1]).replace('/', '-')
+            full = os.path.abspath(sys.argv[1]).replace('/', '-')
             offset = "%s/%s.offset" % (offset, full)
         source = forever_tail(sys.argv[1], offset)
     else:
