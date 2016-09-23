@@ -8,7 +8,10 @@ from lepsius.carbon import CarbonClient
 def forever_tail(path, offset):
     while True:
         for line in Pygtail(path, offset):
-            yield line
+            if type(line) == bytes:
+                yield line.decode('utf8', 'replace')
+            else:
+                yield line
         time.sleep(10)
 
 MIN = "haproxy.backends.{backend}.time_backend_response.min"
